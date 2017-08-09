@@ -3,7 +3,7 @@
     <title>Content</title>
 </head>
 <body>
-    <div>Content goes here!</div>
+    <div id="idContent">Loading...</div>
     <button id="loginButton" onClick="login()" style="display: none">Login</button>
 
     <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
@@ -70,7 +70,7 @@
                           if (error) {
                               console.error("Error getting cached id token. This should never happen.");
                               // At this point we have to get the user involved, so show the login button
-                              showLoginButton(true);
+                              showLoginButton(true, "GetCachedToken failed: " + error);
                           } else {
                               useToken(token);
                           }
@@ -82,7 +82,7 @@
                           console.log("Login was blocked by popup blocker or canceled by user.");
                       }
                       // At this point we have to get the user involved, so show the login button
-                      showLoginButton(true);
+                      showLoginButton(true, "Login attempt failed: " + reason);
                   }
               });
           }
@@ -91,10 +91,14 @@
               // Now you have the id token, you can attach it to requests to your service 
               console.log("Token: " + token);
               showLoginButton(false);
+              $("idContent").text(token);
           }
 
-          function showLoginButton(show) {
+          function showLoginButton(show, message) {
               $("#loginButton").css({ display: show ? "initial" : "none" });
+              if (message) {
+                  $("idContent").text(message);
+              }
           }
     </script>
 </body>
