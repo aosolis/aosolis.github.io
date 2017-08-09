@@ -28,7 +28,7 @@
               cacheLocation: "localStorage",
           };
           if (queryParams["upn"]) {
-              config.extraQueryParameters = "login_hint=" + queryParams["upn"];
+              config.extraQueryParameters = "login_hint=" + encodeURIComponent(queryParams["upn"]);
           }
           let authContext = new AuthenticationContext(config);
 
@@ -60,7 +60,7 @@
 
           function login() {
               microsoftTeams.authentication.authenticate({
-                  url: "https://aosolis.github.io/tab-idtoken/auth.html?upn=" + queryParams["upn"],
+                  url: "https://aosolis.github.io/tab-idtoken/auth.html?upn=" + encodeURIComponent(queryParams["upn"]),
                   successCallback: function (result) {
                       console.log("Login succeeded: " + result);
                   },

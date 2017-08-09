@@ -25,7 +25,7 @@
               cacheLocation: "localStorage",
           };
           if (queryParams["upn"]) {
-              config.extraQueryParameters = "login_hint=" + queryParams["upn"];
+              config.extraQueryParameters = "login_hint=" + encodeURIComponent(queryParams["upn"]);
           }
           let authContext = new AuthenticationContext(config);
 
@@ -39,7 +39,7 @@
                   console.log("Authentication failed");
                   microsoftTeams.authentication.notifyFailure(authContext._getItem(authContext.CONSTANTS.STORAGE.ERROR));
               }
-          } else if (queryParams["start"]) {
+          } else if (queryParams["upn"]) {
               console.log("Starting login");
               authContext.login();
           }
