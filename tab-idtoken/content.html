@@ -27,14 +27,25 @@
               redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
               cacheLocation: "localStorage",
           };
+          if (queryParams["upn"]) {
+              config.extraQueryParameters = "login_hint=" + queryParams["upn"];
+          }
           let authContext = new AuthenticationContext(config);
 
           let user = authContext.getCachedUser();
           if (!user) {
               console.log("No cached user");
-              $("#loginButton").css({ display: "initial"});
+              authContext._renewIdToken(function (err, token) {
+                  if (err) {
+                      console.log("Error getting token " + err);
+                      $("#loginButton").css({ display: "initial" });
+                  } else {
+                      console.log("Token: " + token);
+                      $("#loginButton").css({ display: "none" });
+                  }
+              });
           } else {
-              console.log("Cached user " + user);
+              console.log("Cached user " + user.userName);
               console.log("Refreshing id token");
               authContext._renewIdToken(function (err, token) {
                   if (err) {
