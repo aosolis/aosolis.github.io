@@ -24,7 +24,7 @@
 	"accentColor": "#0079bf",
 	"staticTabs": [
 		{
-			"contentUrl": "https://aosolis.github.io/tab-idtoken/content.html",
+			"contentUrl": "https://aosolis.github.io/tab-idtoken/content.html?upn={upn}",
 			"entityId": "content",
 			"name": "Content",
 			"scopes": ["personal"]
