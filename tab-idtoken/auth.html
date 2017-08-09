@@ -24,6 +24,9 @@
               redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
               cacheLocation: "localStorage",
           };
+          if (queryParams["upn"]) {
+              config.extraQueryParameters = "login_hint=" + queryParams["upn"];
+          }
           let authContext = new AuthenticationContext(config);
 
           if (authContext.isCallback(window.location.hash)) {

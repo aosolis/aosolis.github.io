@@ -60,7 +60,7 @@
 
           function login() {
               microsoftTeams.authentication.authenticate({
-                  url: "https://aosolis.github.io/tab-idtoken/auth.html?start=1",
+                  url: "https://aosolis.github.io/tab-idtoken/auth.html?upn=" + queryParams["upn"],
                   successCallback: function (result) {
                       console.log("Login succeeded: " + result);
                   },
