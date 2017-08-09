@@ -1,0 +1,45 @@
+<html>
+<head>
+    <title>Authentication</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+    <script src="https://statics.teams.microsoft.com/sdk/v1.0/js/MicrosoftTeams.min.js"></script>
+    <script src="adal.js"></script>
+    <script type="text/javascript">
+          microsoftTeams.initialize();
+
+          // Parse query parameters
+          let queryParams = {};
+          location.search.substr(1).split("&").forEach(function(item) {
+              let s = item.split("="),
+              k = s[0],
+              v = s[1] && decodeURIComponent(s[1]);
+              queryParams[k] = v;
+          });
+
+          let config = {
+              clientId: "f8aa5a15-a868-47b9-8586-ba5467286ce6",
+              tenant: "common",
+              redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
+              cacheLocation: "localStorage",
+          };
+          let authContext = new AuthenticationContext(config);
+
+          if (authContext.isCallback(window.location.hash)) {
+              console.log("In login callback");
+              authContext.handleWindowCallback(window.location.hash);
+              if (authContext.getCachedUser()) {
+                  console.log("Authentication succeeded");
+                  microsoftTeams.authentication.notifySuccess();
+              } else {
+                  console.log("Authentication failed");
+                  microsoftTeams.authentication.notifyFailure(authContext._getItem(authContext.CONSTANTS.STORAGE.ERROR));
+              }
+          } else {
+              console.log("Starting login");
+              authContext.login();
+          }
+    </script>
+</body>
+</html>
