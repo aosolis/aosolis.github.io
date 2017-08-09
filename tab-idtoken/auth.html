@@ -36,7 +36,7 @@
                   console.log("Authentication failed");
                   microsoftTeams.authentication.notifyFailure(authContext._getItem(authContext.CONSTANTS.STORAGE.ERROR));
               }
-          } else {
+          } else if (queryParams["start"]) {
               console.log("Starting login");
               authContext.login();
           }
