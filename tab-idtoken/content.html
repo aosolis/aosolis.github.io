@@ -21,53 +21,80 @@
               queryParams[k] = v;
           });
 
+          let upn = queryParams["upn"];
+
           let config = {
               clientId: "f8aa5a15-a868-47b9-8586-ba5467286ce6",
               tenant: "common",
               redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
               cacheLocation: "localStorage",
           };
-          if (queryParams["upn"]) {
-              config.extraQueryParameters = "login_hint=" + encodeURIComponent(queryParams["upn"]);
+          if (upn) {
+              config.extraQueryParameters = "scope=openid+profile&login_hint=" + encodeURIComponent(upn);
+          } else {
+              config.extraQueryParameters = "scope=openid+profile";              
           }
           let authContext = new AuthenticationContext(config);
 
+          // See if we have a cached user
           let user = authContext.getCachedUser();
-          if (!user) {
-              console.log("No cached user");
-              authContext._renewIdToken(function (err, token) {
-                  if (err) {
-                      console.log("Error getting token " + err);
-                      $("#loginButton").css({ display: "initial" });
-                  } else {
-                      console.log("Token: " + token);
-                      $("#loginButton").css({ display: "none" });
-                  }
-              });
-          } else {
-              console.log("Cached user " + user.userName);
-              console.log("Refreshing id token");
-              authContext._renewIdToken(function (err, token) {
-                  if (err) {
-                      console.log("Error getting token " + err);
-                      $("#loginButton").css({ display: "initial" });
-                  } else {
-                      console.log("Token: " + token);
-                      $("#loginButton").css({ display: "none" });
-                  }
-              });
+          if (user) {
+              console.log("ADAL has cached user: " + user.userName);
+              if (user.userName !== upn) {
+                  console.log("ADAL cached user doesn't match expected upn");
+                  authContext.clearCache();
+              }
+
+              // If the UPN matches the expected user you could see if the cached token
+              // is expired, and try to use if it's still fresh. Your service MUST
+              // still validate the token (as usual)!
           }
+
+          // Refresh the id token
+          console.log("Refreshing id token");
+          authContext._renewIdToken(function (err, token) {
+              if (err) {
+                  console.error("Error getting id token, attempting to automatically show the login window");
+                  login();
+              } else {
+                  useToken(token);
+              }
+          });
 
           function login() {
               microsoftTeams.authentication.authenticate({
                   url: "https://aosolis.github.io/tab-idtoken/auth.html?upn=" + encodeURIComponent(queryParams["upn"]),
                   successCallback: function (result) {
                       console.log("Login succeeded: " + result);
+                      authContext.getCachedToken(config.clientId, function (error, token) {
+                          if (error) {
+                              console.error("Error getting cached id token. This should never happen.");
+                              // At this point we have to get the user involved, so show the login button
+                              showLoginButton(true);
+                          } else {
+                              useToken(token);
+                          }
+                      });
                   },
                   failureCallback: function (reason) {
                       console.log("Login failed: " + reason);
+                      if (reason === "CancelledByUser") {
+                          console.log("Login was blocked by popup blocker or canceled by user.");
+                      }
+                      // At this point we have to get the user involved, so show the login button
+                      showLoginButton(true);
                   }
               });
+          }
+
+          function useToken(token) {
+              // Now you have the id token, you can attach it to requests to your service 
+              console.log("Token: " + token);
+              showLoginButton(false);
+          }
+
+          function showLoginButton(show) {
+              $("#loginButton").css({ display: show ? "initial" : "none" });
           }
     </script>
 </body>

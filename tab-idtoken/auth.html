@@ -18,14 +18,18 @@
               queryParams[k] = v;
           });
 
+          let upn = queryParams["upn"];
+
           let config = {
               clientId: "f8aa5a15-a868-47b9-8586-ba5467286ce6",
               tenant: "common",
               redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
               cacheLocation: "localStorage",
           };
-          if (queryParams["upn"]) {
-              config.extraQueryParameters = "login_hint=" + encodeURIComponent(queryParams["upn"]);
+          if (upn) {
+              config.extraQueryParameters = "scope=openid+profile&login_hint=" + encodeURIComponent(upn);
+          } else {
+              config.extraQueryParameters = "scope=openid+profile";              
           }
           let authContext = new AuthenticationContext(config);
 
@@ -40,7 +44,7 @@
                   microsoftTeams.authentication.notifyFailure(authContext._getItem(authContext.CONSTANTS.STORAGE.ERROR));
               }
           } else if (queryParams["upn"]) {
-              console.log("Starting login");
+              console.log("Starting login flow");
               authContext.login();
           }
     </script>
