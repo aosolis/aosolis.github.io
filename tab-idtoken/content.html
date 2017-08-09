@@ -1,0 +1,50 @@
+<html>
+<head>
+    <title>Content</title>
+</head>
+<body>
+    <div>Content goes here!</div>
+    <button id="loginButton" onClick="login()" style="display: none">Login</button>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+    <script src="https://statics.teams.microsoft.com/sdk/v1.0/js/MicrosoftTeams.min.js"></script>
+    <script src="adal.js"></script>
+    <script type="text/javascript">
+          microsoftTeams.initialize();
+
+          // Parse query parameters
+          let queryParams = {};
+          location.search.substr(1).split("&").forEach(function(item) {
+              let s = item.split("="),
+              k = s[0],
+              v = s[1] && decodeURIComponent(s[1]);
+              queryParams[k] = v;
+          });
+
+          let config = {
+              clientId: "f8aa5a15-a868-47b9-8586-ba5467286ce6",
+              tenant: "common",
+              redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
+          };
+          let authContext = new AuthenticationContext(config);
+
+          let user = authContext.getCachedUser();
+          if (!user) {
+              console.log("No cached user");
+              $("#loginButton").css({ display: "initial"});
+          } else {
+              console.log("Cached user " + user);
+              console.log("Refreshing id token");
+              authContext._renewIdToken(function (err, token) {
+                  if (err) {
+                      console.log("Error getting token " + err);
+                      $("#loginButton").css({ display: "initial" });
+                  } else {
+                      console.log("Token: " + token);
+                      $("#loginButton").css({ display: "none" });
+                  }
+              });
+          }
+    </script>
+</body>
+</html>
