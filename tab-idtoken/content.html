@@ -3,7 +3,7 @@
     <title>Content</title>
 </head>
 <body>
-    <div id="idContent">Loading...</div>
+    <div id="contentDiv">Loading...</div>
     <button id="loginButton" onClick="login()" style="display: none">Login</button>
 
     <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
@@ -91,13 +91,13 @@
               // Now you have the id token, you can attach it to requests to your service 
               console.log("Token: " + token);
               showLoginButton(false);
-              $("idContent").text(token);
+              $("#contentDiv").text(token);
           }
 
           function showLoginButton(show, message) {
               $("#loginButton").css({ display: show ? "initial" : "none" });
               if (message) {
-                  $("idContent").text(message);
+                  $("#contentDiv").text(message);
               }
           }
     </script>
