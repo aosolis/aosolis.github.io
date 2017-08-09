@@ -63,7 +63,7 @@
 
           function login() {
               microsoftTeams.authentication.authenticate({
-                  url: "https://aosolis.github.io/tab-idtoken/auth.html?upn=" + encodeURIComponent(queryParams["upn"]),
+                  url: "https://aosolis.github.io/tab-idtoken/auth-start.html?upn=" + encodeURIComponent(queryParams["upn"]),
                   successCallback: function (result) {
                       console.log("Login succeeded: " + result);
                       authContext.getCachedToken(config.clientId, function (error, token) {
