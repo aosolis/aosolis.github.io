@@ -25,8 +25,9 @@
           let upn = queryParams["upn"];
 
           let config = {
+              // The id of the AAD app
               clientId: "f8aa5a15-a868-47b9-8586-ba5467286ce6",
-              tenant: "common",
+              // Add this redirect uri to the AAD app config
               redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
               cacheLocation: "localStorage",
           };
@@ -37,7 +38,7 @@
           }
           let authContext = new AuthenticationContext(config);
 
-          // See if we have a cached user
+          // See if we have a user already cached
           let user = authContext.getCachedUser();
           if (user) {
               console.log("ADAL has cached user: " + user.userName);
@@ -47,15 +48,19 @@
               }
           }
 
-          // Get the the id token, which is the access token for the clientId resource
+          // Get the the id token (which is the access token for resource = clientId)
           let token = authContext.getCachedToken(config.clientId);
           if (token) {
               useToken(token);
           } else {
-              // Token doesn't match user or is expired
+              // No token, or token is expired
               console.log("Refreshing id token");
               authContext._renewIdToken(function (err, token) {
                   if (err) {
+                      // Attempt to launch the login popup. On browsers this could potentially be blocked by
+                      // a popup blocker, in which case the login attempt will fail with an reason FailedToOpenWindow.
+                      // This is handled in the failureCallback below.
+                      // You could choose to stop and show a login button here instead.
                       console.error("Error getting id token, attempting to automatically show the login window");
                       login();
                   } else {
