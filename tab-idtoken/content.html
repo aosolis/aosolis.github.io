@@ -66,8 +66,10 @@
 
           function login() {
               $("#contentDiv").text("Launching authentication popup...");
+              let authUrl = "https://aosolis.github.io/tab-idtoken/auth-start.html?upn=" + encodeURIComponent(queryParams["upn"]);
+              console.log("Launching auth url: " + authUrl);
               microsoftTeams.authentication.authenticate({
-                  url: "https://aosolis.github.io/tab-idtoken/auth-start.html?upn=" + encodeURIComponent(queryParams["upn"]),
+                  url: authUrl,
                   successCallback: function (result) {
                       console.log("Login succeeded: " + result);
                       let token = authContext.getCachedToken(config.clientId);
