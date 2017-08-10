@@ -9,7 +9,6 @@
     <script type="text/javascript">
           microsoftTeams.initialize();
 
-          let config = window.adalConfig;
           let authContext = new AuthenticationContext(config);
 
           if (authContext.isCallback(window.location.hash)) {
