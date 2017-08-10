@@ -8,12 +8,6 @@
     <script type="text/javascript">
           microsoftTeams.initialize();
 
-          let config = {
-              clientId: "f8aa5a15-a868-47b9-8586-ba5467286ce6",
-              tenant: "common",
-              redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
-              cacheLocation: "localStorage",
-          };
           let authContext = new AuthenticationContext(config);
 
           if (authContext.isCallback(window.location.hash)) {

@@ -18,22 +18,15 @@
           });
 
           let upn = queryParams["upn"];
-
-          let config = {
-              clientId: "f8aa5a15-a868-47b9-8586-ba5467286ce6",
-              tenant: "common",
-              redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
-              cacheLocation: "localStorage",
-          };
           if (upn) {
               config.extraQueryParameters = "scope=openid+profile&login_hint=" + encodeURIComponent(upn);
           } else {
               config.extraQueryParameters = "scope=openid+profile";              
           }
-          let authContext = new AuthenticationContext(config);
 
           console.log("extraQueryParameters: " + config.extraQueryParameters);
           console.log("Starting login flow");
+          let authContext = new AuthenticationContext(config);
           authContext.login();
     </script>
 </body>

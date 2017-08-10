@@ -10,6 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
     <script src="https://statics.teams.microsoft.com/sdk/v1.0/js/MicrosoftTeams.min.js"></script>
     <script src="adal.js"></script>
+    <script src="auth-config.js"></script>
     <script type="text/javascript">
           microsoftTeams.initialize();
 
@@ -23,19 +24,12 @@
           });
 
           let upn = queryParams["upn"];
-
-          let config = {
-              // The id of the AAD app
-              clientId: "f8aa5a15-a868-47b9-8586-ba5467286ce6",
-              // Add this redirect uri to the AAD app config
-              redirectUri: "https://aosolis.github.io/tab-idtoken/auth.html",
-              cacheLocation: "localStorage",
-          };
           if (upn) {
               config.extraQueryParameters = "scope=openid+profile&login_hint=" + encodeURIComponent(upn);
           } else {
               config.extraQueryParameters = "scope=openid+profile";              
           }
+
           let authContext = new AuthenticationContext(config);
 
           // See if we have a user already cached
