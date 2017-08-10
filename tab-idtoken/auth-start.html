@@ -25,6 +25,16 @@
               config.extraQueryParameters = "scope=openid+profile";              
           }
 
+          // Use a custom displayCall function to add extra query parameters to the url before navigating to it
+          config.displayCall = function (urlNavigate) {
+              if (urlNavigate) {
+                  if (config.extraQueryParameters) {
+                      urlNavigate += "&" + config.extraQueryParameters;
+                  }
+                  window.location.replace(urlNavigate);
+              }
+          }
+
           console.log("extraQueryParameters: " + config.extraQueryParameters);
           console.log("Starting login flow");
           let authContext = new AuthenticationContext(config);
