@@ -5,6 +5,7 @@
 <body>
     <div id="contentDiv">Loading...</div>
     <button id="loginButton" onClick="login()" style="display: none">Login</button>
+    <button onClick="clearCache()">Clear cache</button>
 
     <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
     <script src="https://statics.teams.microsoft.com/sdk/v1.0/js/MicrosoftTeams.min.js"></script>
@@ -100,6 +101,10 @@
               if (message) {
                   $("#contentDiv").text(message);
               }
+          }
+
+          function clearCache() {
+              authContext.clearCache();
           }
     </script>
 </body>
