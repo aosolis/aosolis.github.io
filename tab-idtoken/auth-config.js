@@ -5,4 +5,5 @@ let config = {
     // AAD app config should have this as a valid redirect uri
     redirectUri: "https://aosolis.github.io/tab-idtoken/auth-done.html",
     cacheLocation: "localStorage",
+    navigateToLoginRequestUrl: false,
 };
