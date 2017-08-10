@@ -1,5 +1,5 @@
 // ADAL.js configuration
-let config = {
+window.adalConfig = {
     // The id of the AAD app
     clientId: "f8aa5a15-a868-47b9-8586-ba5467286ce6",
     // AAD app config should have this as a valid redirect uri
