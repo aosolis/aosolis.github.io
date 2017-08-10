@@ -44,37 +44,38 @@
                   console.log("ADAL cached user doesn't match expected upn");
                   authContext.clearCache();
               }
-
-              // If the UPN matches the expected user you could see if the cached token
-              // is expired, and try to use if it's still fresh. Your service MUST
-              // still validate the token (as usual)!
           }
 
-          // Refresh the id token
-          console.log("Refreshing id token");
-          authContext._renewIdToken(function (err, token) {
-              if (err) {
-                  console.error("Error getting id token, attempting to automatically show the login window");
-                  login();
-              } else {
-                  useToken(token);
-              }
-          });
+          // Get the the id token, which is the access token for the clientId resource
+          let token = authContext.getCachedToken(config.clientId);
+          if (token) {
+              useToken(token);
+          } else {
+              // Token doesn't match user or is expired
+              console.log("Refreshing id token");
+              authContext._renewIdToken(function (err, token) {
+                  if (err) {
+                      console.error("Error getting id token, attempting to automatically show the login window");
+                      login();
+                  } else {
+                      useToken(token);
+                  }
+              });
+          }
 
           function login() {
               microsoftTeams.authentication.authenticate({
                   url: "https://aosolis.github.io/tab-idtoken/auth-start.html?upn=" + encodeURIComponent(queryParams["upn"]),
                   successCallback: function (result) {
                       console.log("Login succeeded: " + result);
-                      authContext.getCachedToken(config.clientId, function (error, token) {
-                          if (error) {
-                              console.error("Error getting cached id token. This should never happen.");
-                              // At this point we have to get the user involved, so show the login button
-                              showLoginButton(true, "GetCachedToken failed: " + error);
-                          } else {
-                              useToken(token);
-                          }
-                      });
+                      let token = authContext.getCachedToken(config.clientId);
+                      if (token) {
+                          useToken(token);
+                      } else {
+                          console.error("Error getting cached id token. This should never happen.");
+                          // At this point we have to get the user involved, so show the login button
+                          showLoginButton(true, "GetCachedToken failed")
+                      };
                   },
                   failureCallback: function (reason) {
                       console.log("Login failed: " + reason);
