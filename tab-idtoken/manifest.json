@@ -18,10 +18,10 @@
 		"full": "Tab authentication sample"
 	},
 	"icons": {
-		"outline": "trello_outline20.png",
-		"color": "trello_color96.png"
+		"outline": "logo_app_20x20.png",
+		"color": "logo_app_96x96.png"
 	},
-	"accentColor": "#0079bf",
+	"accentColor": "#16233A",
 	"staticTabs": [
 		{
 			"contentUrl": "https://aosolis.github.io/tab-idtoken/content.html?upn={upn}",
