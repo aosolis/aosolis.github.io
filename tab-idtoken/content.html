@@ -65,6 +65,7 @@
           }
 
           function login() {
+              $("#contentDiv").text("Launching authentication popup...");
               microsoftTeams.authentication.authenticate({
                   url: "https://aosolis.github.io/tab-idtoken/auth-start.html?upn=" + encodeURIComponent(queryParams["upn"]),
                   successCallback: function (result) {
@@ -80,7 +81,7 @@
                   },
                   failureCallback: function (reason) {
                       console.log("Login failed: " + reason);
-                      if (reason === "CancelledByUser") {
+                      if (reason === "CancelledByUser" || reason === "FailedToOpenWindow") {
                           console.log("Login was blocked by popup blocker or canceled by user.");
                       }
                       // At this point we have to get the user involved, so show the login button
