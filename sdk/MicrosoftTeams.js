@@ -178,7 +178,7 @@ var microsoftTeams;
      * but after the frame is loaded successfully.
      */
     function initialize() {
-        console.log(">>> initialize: initialize() called");
+        console.log(">>> initialize: initialize() called from " + window.origin);
         if (initializeCalled) {
             // Independent components might not know whether the SDK is initialized so might call it to be safe.
             // Just no-op if that happens to make it easier to use.
