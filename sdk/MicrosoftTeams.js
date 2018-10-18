@@ -1074,7 +1074,7 @@ var microsoftTeams;
         }
         else {
             var targetOrigin = getTargetOrigin(targetWindow);
-            console.log(">>> sendMessageRequest: target origin is" + targetOrigin);
+            console.log(">>> sendMessageRequest: target origin: " + targetOrigin + ", targetWindow: " + targetWindow);
             // If the target window isn't closed and we already know its origin, send the message right away; otherwise,
             // queue the message and send it after the origin is established
             if (targetWindow && targetOrigin) {
