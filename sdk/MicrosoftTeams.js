@@ -178,9 +178,11 @@ var microsoftTeams;
      * but after the frame is loaded successfully.
      */
     function initialize() {
+        console.log(">>> initialize: initialize() called");
         if (initializeCalled) {
             // Independent components might not know whether the SDK is initialized so might call it to be safe.
             // Just no-op if that happens to make it easier to use.
+            console.log("initialize: already called");
             return;
         }
         initializeCalled = true;
@@ -208,6 +210,7 @@ var microsoftTeams;
             parentOrigin = "*";
             var messageId = sendMessageRequest(parentWindow, "initialize", [version]);
             callbacks[messageId] = function (context, clientType) {
+                console.log(">>> initialize: SDK callback");
                 frameContext = context;
                 hostClientType = clientType;
             };
@@ -644,6 +647,7 @@ var microsoftTeams;
          * Initiates an authentication request, which opens a new window with the specified settings.
          */
         function authenticate(authenticateParameters) {
+            console.log(">>> authenticate: authenticate() called");
             var authenticateParams = authenticateParameters !== undefined
                 ? authenticateParameters
                 : authParams;
@@ -814,6 +818,7 @@ var microsoftTeams;
          * @param callbackUrl Specifies the url to redirect back to if the client is Win32 Outlook.
          */
         function notifySuccess(result, callbackUrl) {
+            console.log(">>> notifySuccess: notifySuccess() called");
             redirectIfWin32Outlook(callbackUrl, "result", result);
             ensureInitialized(frameContexts.authentication);
             sendMessageRequest(parentWindow, "authentication.authenticate.success", [
@@ -821,6 +826,7 @@ var microsoftTeams;
             ]);
             // Wait for the message to be sent before closing the window
             waitForMessageQueue(parentWindow, function () {
+                console.log(">>> notifySuccess: message sent to window, closing popup");
                 return setTimeout(function () { return currentWindow.close(); }, 200);
             });
         }
@@ -1042,6 +1048,7 @@ var microsoftTeams;
                 : null;
     }
     function flushMessageQueue(targetWindow) {
+        console.log(">>> flushMessageQueue");
         var targetOrigin = getTargetOrigin(targetWindow);
         var targetMessageQueue = getTargetMessageQueue(targetWindow);
         while (targetWindow && targetOrigin && targetMessageQueue.length > 0) {
@@ -1067,12 +1074,15 @@ var microsoftTeams;
         }
         else {
             var targetOrigin = getTargetOrigin(targetWindow);
+            console.log(">>> sendMessageRequest: target origin is" + targetOrigin);
             // If the target window isn't closed and we already know its origin, send the message right away; otherwise,
             // queue the message and send it after the origin is established
             if (targetWindow && targetOrigin) {
+                console.log(">>> sendMessageRequest: posted message to" + targetOrigin);
                 targetWindow.postMessage(request, targetOrigin);
             }
             else {
+                console.log(">>> sendMessageRequest: queueing message");
                 getTargetMessageQueue(targetWindow).push(request);
             }
         }
